@@ -1,19 +1,45 @@
 import React, { Component } from 'react'
+import ShoppingList from './ShoppingList'
+import appState from '../AppState'
 import '../styles/app.css'
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = appState
+  }
+
+  filteredItems () {
+    const {list, filter} = this.state
+    if (filter === 'all') {
+      return list
+    }
+
+    return list.filter(item => !item.completed)
+  }
+
+  countItemsLeft () {
+    const {list} = this.state
+    return list.filter(item => !item.completed).length
+  }
+
+  totalPrice () {
+    const {list} = this.state
+    return list.reduce((total, item) => total + item.quantity*item.price, 0)
+  }
+
   render() {
     return (
       <div className="app">
         <h1>Shopping List</h1>
 
         <div className="row shopping-summary">
-          <span className="item-left">3 items left</span>
+          <span className="item-left">{this.countItemsLeft()} items left</span>
           <ul className="filters">
             <li className="actived">All</li>
             <li>Incomplete</li>
           </ul>
-          <span className="total">Total: $2,065</span>
+          <span className="total">Total: ${this.totalPrice()}</span>
         </div>
 
         <div className="row add-new-item">
@@ -27,45 +53,7 @@ class App extends Component {
           </div>
           <button className="add-btn">Add Item</button>
         </div>
-
-        <ul className="shopping-list">
-          <li className="row">
-            <input type="checkbox" className="toogle" />
-            <div className="info">
-              <h2>Iphone X</h2>
-              <div className="sub-info">
-                <span className="quantity">Quantity: 2</span>
-                <span>$1,000/device</span>
-              </div>
-            </div>
-            <span className="sub-total">$2,000</span>
-            <a className="delete">x</a>
-          </li>
-          <li className="row">
-            <input type="checkbox" className="toogle" />
-            <div className="info">
-              <h2>Apple</h2>
-              <div className="sub-info">
-                <span className="quantity">Quantity: 10</span>
-                <span>$5/kg</span>
-              </div>
-            </div>
-            <span className="sub-total">$50</span>
-            <a className="delete">x</a>
-          </li>
-          <li className="row">
-            <input type="checkbox" className="toogle" />
-            <div className="info">
-              <h2>Coca Cola</h2>
-              <div className="sub-info">
-                <span className="quantity">Quantity: 5</span>
-                <span>$3/bottle</span>
-              </div>
-            </div>
-            <span className="sub-total">$15</span>
-            <a className="delete">x</a>
-          </li>
-        </ul>
+        <ShoppingList list={this.filteredItems()} />
       </div>
     );
   }
