@@ -1,16 +1,12 @@
 import React, { Component } from 'react'
 
 export default class ShoppingItem extends Component {
-  // constructor(props) {
-  //   super(props)
-  // }
-
   render () {
-    const {item} = this.props
+    const {item, onRemove, onToogle} = this.props
 
     return (
       <li key={item.uid} className="row">
-        <input type="checkbox" className="toogle" />
+        <input type="checkbox" className="toogle" checked={item.completed} onChange={() => onToogle(item.uid, !item.completed)} />
         <div className="info">
           <h2>{item.title}</h2>
           <div className="sub-info">
@@ -19,7 +15,7 @@ export default class ShoppingItem extends Component {
           </div>
         </div>
         <span className="sub-total">${item.quantity * item.price}</span>
-        <a className="delete">x</a>
+        <a className="delete" onClick={() => onRemove(item.uid)}>x</a>
       </li>
     )
   }

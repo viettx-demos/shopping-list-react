@@ -28,7 +28,31 @@ class App extends Component {
     return list.reduce((total, item) => total + item.quantity*item.price, 0)
   }
 
+  onRemove (uid) {
+    const {list} = this.state
+    const items = list.filter(item => item.uid !== uid)
+
+    this.setState({list: items})
+  }
+
+  onToogle (uid, isCompleted) {
+    const {list} = this.state
+    for (let item of list) {
+      if (item.uid === uid) {
+        item.completed = isCompleted
+        break
+      }
+    }
+
+    this.setState({list})
+  }
+
+  onFilter (type) {
+    this.setState({filter: type})
+  }
+
   render() {
+    const {filter} = this.state
     return (
       <div className="app">
         <h1>Shopping List</h1>
@@ -36,8 +60,8 @@ class App extends Component {
         <div className="row shopping-summary">
           <span className="item-left">{this.countItemsLeft()} items left</span>
           <ul className="filters">
-            <li className="actived">All</li>
-            <li>Incomplete</li>
+            <li className={filter === 'all' ? 'actived' : ''} onClick={() => this.onFilter('all')}>All</li>
+            <li className={filter === 'incomplete' ? 'actived' : ''} onClick={() => this.onFilter('incomplete')}>Incomplete</li>
           </ul>
           <span className="total">Total: ${this.totalPrice()}</span>
         </div>
@@ -53,7 +77,11 @@ class App extends Component {
           </div>
           <button className="add-btn">Add Item</button>
         </div>
-        <ShoppingList list={this.filteredItems()} />
+        <ShoppingList 
+          list={this.filteredItems()} 
+          onRemove={this.onRemove.bind(this)} 
+          onToogle={this.onToogle.bind(this)}
+        />
       </div>
     );
   }
