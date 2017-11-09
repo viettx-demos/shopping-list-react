@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ShoppingNav from './ShoppingNav'
 import ShoppingList from './ShoppingList'
 import AddItem from './AddItem'
 import appState from '../AppState'
@@ -66,17 +67,16 @@ class App extends Component {
     return (
       <div className="app">
         <h1>Shopping List</h1>
-
-        <div className="row shopping-summary">
-          <span className="item-left">{this.countItemsLeft()} items left</span>
-          <ul className="filters">
-            <li className={filter === 'all' ? 'actived' : ''} onClick={() => this.onFilter('all')}>All</li>
-            <li className={filter === 'incomplete' ? 'actived' : ''} onClick={() => this.onFilter('incomplete')}>Incomplete</li>
-          </ul>
-          <span className="total">Total: ${this.totalPrice()}</span>
-        </div>
-
+        
+        <ShoppingNav 
+          itemLeft={this.countItemsLeft()}
+          totalPrice={this.totalPrice()}
+          filter={filter}
+          onFilter={this.onFilter.bind(this)}
+        />
+        
         <AddItem onAdd={this.onAddNewItem.bind(this)} />
+        
         <ShoppingList 
           list={this.filteredItems()} 
           onRemove={this.onRemove.bind(this)} 
