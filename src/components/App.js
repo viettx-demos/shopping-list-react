@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ShoppingList from './ShoppingList'
+import AddItem from './AddItem'
 import appState from '../AppState'
 import '../styles/app.css'
 
@@ -51,6 +52,15 @@ class App extends Component {
     this.setState({filter: type})
   }
 
+  onAddNewItem (item) {
+    const {currentUID, list} = this.state
+    const newItem = {...item, uid: currentUID + 1, completed: false}
+    this.setState({
+      list: [...list, newItem],
+      currentUID: currentUID + 1
+    })
+  }
+
   render() {
     const {filter} = this.state
     return (
@@ -66,17 +76,7 @@ class App extends Component {
           <span className="total">Total: ${this.totalPrice()}</span>
         </div>
 
-        <div className="row add-new-item">
-          <div className="form">
-            <input type="text" className="row item-name" placeholder="New item need to shop" />
-            <div className="item-info">
-              <input type="text" className="row item-price" placeholder="Price" />
-              <input type="text" className="row item-quantity" placeholder="Quantity" />
-              <input type="text" className="row item-unit" placeholder="Unit" />
-            </div>
-          </div>
-          <button className="add-btn">Add Item</button>
-        </div>
+        <AddItem onAdd={this.onAddNewItem.bind(this)} />
         <ShoppingList 
           list={this.filteredItems()} 
           onRemove={this.onRemove.bind(this)} 
